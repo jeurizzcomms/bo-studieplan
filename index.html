@@ -240,16 +240,26 @@ const DAYS = [
   icon:'🏆', bg:'#FFD700', badge:'VANDAAG', bc:'b-today', status:'today',
   sub:'Frans gehaald met een 9 — vanavond flink aan de slag!',
   blocks:[{
-    title:'Biologie H3 – vandaag H3.1 + H3.2 leren', tag:'bio', tagClass:'tag-bio',
-    stof:`<strong>🎉 NEGEN voor Frans — nu doorpakken!</strong><br>Je hebt vandaag de rest van de dag. Gebruik die tijd. Biologie toets is wo 1 april — maar hoe eerder je start, hoe relaxter de toetsweek wordt.<br><br><strong>📋 Toetsstof BIO</strong><ul><li>H3.1 – Zintuigen en Prikkels</li><li>H3.2 – Het Oog</li><li>H3.3 – Het Oor</li><li>H3.4 – Huid en andere zintuigen</li><li>H3.5 – Overzicht</li><li>Oefentoets blz. 208</li></ul>`,
+    title:'Biologie H3 – geen boek nodig, alles staat hier!', tag:'bio', tagClass:'tag-bio',
+    stof:`<strong>📖 H3.1 — Zintuigen en Prikkels</strong>
+Een <em>zintuig</em> vangt prikkels op uit de omgeving. Een <em>prikkel</em> is een verandering (licht, geluid, warmte). De <em>receptor</em> zet de prikkel om in een zenuwsignaal → hersenen → reactie. De vijf zintuigen: oog (licht), oor (geluid), neus (geur), tong (smaak), huid (druk/pijn/temperatuur).
+<br><br><strong>👁️ H3.2 — Het Oog</strong>
+Licht gaat via het <em>hoornvlies</em> het oog in. De <em>iris</em> regelt de grootte van de <em>pupil</em>. De <em>lens</em> stelt scherp (<em>accommoderen</em>: dikker = dichtbij, dunner = veraf). Op het <em>netvlies</em> zitten <em>kegeltjes</em> (kleuren, veel licht) en <em>staafjes</em> (zwart-wit, weinig licht). De <em>gele vlek</em> = scherpste zien. De <em>blinde vlek</em> = geen receptoren (uitgang oogzenuw). <em>Bijziend</em> = ver wazig. <em>Verziend</em> = dichtbij wazig.
+<br><br><strong>👂 H3.3 — Het Oor</strong>
+Geluidsgolven → buitenoor → gehoorgang → <em>trommelvlies</em> (trilt) → drie <em>gehoorbeentjes</em> (hamer, aambeeld, stijgbeugel) → <em>slakkenhuis</em> (cochlea, zet trilling om in zenuwsignaal) → <em>gehoorzenuw</em> → hersenen. Het <em>evenwichtsorgaan</em> zit ook in het binnenoor. Geluidssterkte = <em>decibel (dB)</em>. Toonhoogte = <em>hertz (Hz)</em>.
+<br><br><strong>🤚 H3.4 — De Huid</strong>
+Huid heeft receptoren voor druk, aanraking, pijn, warmte en kou. <em>Vingertopppen</em> hebben de meeste tastzenuwen. <em>Pijnreceptoren</em> zijn overal — ze beschermen het lichaam.
+<br><br><strong>🔄 H3.5 — Overzicht signaalweg</strong>
+Prikkel → receptor → zenuwsignaal → <em>centraal zenuwstelsel</em> (hersenen + ruggenmerg) → reactie.`,
     tasks:[
       {id:'t4', e:'🏆', l:'Frans SO: NEGEN! 🎉 Trots zijn mag.', s:'Even vieren — dan aan de slag!'},
-      {id:'t5', e:'👁️', l:'H3.1 lezen: Zintuigen & Prikkels (45 min)', s:'Lees actief: onderstreep, schrijf begrippen over in je schrift'},
-      {id:'t6', e:'👁️', l:'H3.2 lezen: Het Oog (45 min)', s:'Schets het oog na — zo onthoud je de onderdelen veel beter'},
-      {id:'t6b', e:'✅', l:'Opdrachten H3.1 + H3.2 nakijken (15 min)', s:'Gebruik het nakijkboekje — markeer wat fout was'},
-      {id:'t6c', e:'🔢', l:'Wiskunde: 20 min oefensommen (toets al vr 27!)', s:'Pak je schrift, pak een som, schrijf alles op'},
+      {id:'t5', e:'📖', l:'H3.1 + H3.2 lezen hierboven + begrippen opschrijven (45 min)', s:'Schrijf elk begrip met uitleg in je schrift — niet kopiëren, eigen woorden!'},
+      {id:'t6', e:'✍️', l:'Oog tekenen uit je hoofd (zonder kijken)', s:'Hoornvlies, iris, pupil, lens, netvlies, gele vlek, blinde vlek, oogzenuw'},
+      {id:'t6b', e:'📖', l:'H3.3 + H3.4 lezen hierboven + begrippen opschrijven (45 min)', s:'Teken ook het oor na: trommelvlies → gehoorbeentjes → slakkenhuis'},
+      {id:'t6c', e:'🃏', l:'Bio begrippen oefenen met flashcards', s:'Alle 32 begrippen — tot je ze allemaal goed hebt'},
+      {id:'t6d', e:'🔢', l:'Wiskunde: 20 min oefensommen (toets al vr 27!)', s:'Pak je schrift, schrijf alles op'},
     ],
-    cta:{label:'👁️ Biologie starten', action:'start'}
+    cta:{label:'🔬 Bio begrippen oefenen', action:'bioquiz'}
   }]
 },{
   id:'wo18', name:'Woensdag', date:'18 maart',
@@ -264,7 +274,7 @@ const DAYS = [
       {id:'t8', e:'🤚', l:'H3.4 + H3.5 lezen: Huid + overzicht (30 min)', s:'Schrijf de zintuigen en functies op een blaadje'},
       {id:'t9', e:'📝', l:'Test jezelf blz. 208 maken (20 min)', s:'Pen en papier, echt proberen — dan nakijken'},
     ],
-    cta:{label:'▶️ Biologie verder', action:'start'}
+    cta:{label:'🔬 Bio begrippen oefenen', action:'bioquiz'}
   },{
     title:'Wiskunde – eerste grote oefening', tag:'wi', tagClass:'tag-wi',
     stof:`<strong>📋 Toetsstof WI (toets vr 27 maart – over 9 dagen!)</strong><ul><li>Gebruik je schrift en de oefentoets in ELO</li><li>Schrijf áltijd tussenstappen op</li></ul>`,
@@ -404,9 +414,9 @@ const DAYS = [
     stof:null,
     tasks:[
       {id:'t25', e:'👁️', l:'Bio H3 herhalen: cover-test alle paragrafen (45 min)', s:'Dek je aantekeningen af — wat weet je nog?'},
-      {id:'t26', e:'📝', l:'"Test jezelf" blz. 208 opnieuw maken (20 min)', s:'Beter dan gisteren? Dan zit het erin!'},
+      {id:'t26', e:'🃏', l:'Bio begrippen flashcards: alles nog een keer (30 min)', s:'Tot je ze allemaal goed hebt'},
     ],
-    cta:{label:'▶️ Beginnen', action:'start'}
+    cta:{label:'🔬 Bio begrippen oefenen', action:'bioquiz'}
   },{
     title:'Frans – woordjes + avoir', tag:'fa', tagClass:'tag-fa',
     stof:null,
@@ -572,6 +582,48 @@ const DAYS = [
     cta:{label:'🃏 Laatste Frans check', action:'quiz'}
   }]
 }];
+
+// ── BIOLOGIE H3 WAARNEMEN ────────────────────────────────────────────────────
+const BIO_WORDS = [
+  // H3.1 Zintuigen en prikkels
+  {fr:'zintuig',nl:'Orgaan dat prikkels uit de omgeving opvangt (bijv. oog, oor, huid)'},
+  {fr:'prikkel',nl:'Een verandering in de omgeving die een zintuig kan opvangen (bijv. licht, geluid, warmte)'},
+  {fr:'receptor',nl:'Zintuigcel die een bepaalde prikkel opvangt en omzet in een zenuwsignaal'},
+  {fr:'zenuwstelsel',nl:'Verwerkt prikkels en stuurt reacties aan — bestaat uit hersenen, ruggenmerg en zenuwen'},
+  {fr:'reactie',nl:'Het antwoord van het lichaam op een prikkel'},
+  {fr:'vijf zintuigen',nl:'Oog (licht), oor (geluid), neus (geur), tong (smaak), huid (tast/druk/temperatuur/pijn)'},
+  // H3.2 Het oog
+  {fr:'hoornvlies',nl:'Doorzichtig voorste deel van het oog — licht gaat hier doorheen'},
+  {fr:'iris',nl:'Het gekleurde deel van het oog — regelt hoe groot de pupil is'},
+  {fr:'pupil',nl:'De opening in de iris waar licht doorheen gaat — wordt groter in het donker'},
+  {fr:'lens',nl:'Breekt het licht en stelt scherp op dichtbij of veraf (accommoderen)'},
+  {fr:'accommoderen',nl:'Scherpstellen: de lens wordt dikker (dichtbij) of dunner (veraf)'},
+  {fr:'netvlies',nl:'Lichtgevoelige laag achterin het oog — bevat kegeltjes en staafjes'},
+  {fr:'kegeltjes',nl:'Receptoren op het netvlies voor kleuren zien — werken goed bij veel licht'},
+  {fr:'staafjes',nl:'Receptoren op het netvlies voor zwart-wit zien — werken bij weinig licht'},
+  {fr:'gele vlek',nl:'Plek op het netvlies met de meeste kegeltjes — hier zie je het scherpst'},
+  {fr:'blinde vlek',nl:'Plek op het netvlies zonder receptoren — waar de oogzenuw naar de hersenen gaat'},
+  {fr:'oogzenuw',nl:'Stuurt het zenuwsignaal van het netvlies naar de hersenen'},
+  {fr:'bijziend',nl:'Ver weg wazig zien — het brandpunt ligt vóór het netvlies'},
+  {fr:'verziend',nl:'Dichtbij wazig zien — het brandpunt ligt achter het netvlies'},
+  // H3.3 Het oor
+  {fr:'buitenoor',nl:'Vangt geluidsgolven op en leidt ze naar de gehoorgang'},
+  {fr:'trommelvlies',nl:'Vlies dat trilt door geluid — scheiding tussen buitenoor en middenoor'},
+  {fr:'gehoorbeentjes',nl:'Drie kleine botjes in het middenoor: hamer, aambeeld en stijgbeugel — versterken de trilling'},
+  {fr:'slakkenhuis (cochlea)',nl:'Spiraalvormig orgaan in het binnenoor — zet trillingen om in zenuwsignalen'},
+  {fr:'gehoorzenuw',nl:'Stuurt het zenuwsignaal van het slakkenhuis naar de hersenen'},
+  {fr:'evenwichtsorgaan',nl:'Zit in het binnenoor — registreert draai- en versnellingsbewegingen'},
+  {fr:'decibel (dB)',nl:'Eenheid voor geluidssterkte — boven 80 dB kan gehoor beschadigen'},
+  {fr:'hertz (Hz)',nl:'Eenheid voor toonhoogte (frequentie) — mensen horen 20 tot 20.000 Hz'},
+  // H3.4 Huid
+  {fr:'huidreceptoren',nl:'Receptoren in de huid voor druk, aanraking, pijn, warmte en kou'},
+  {fr:'vingertopppen',nl:'Hebben de meeste tastzenuwen — daardoor kun je kleine details voelen'},
+  {fr:'pijnreceptoren',nl:'Zijn overal in de huid aanwezig — waarschuwen voor schade aan het lichaam'},
+  // H3.5 Overzicht
+  {fr:'signaalweg zintuig',nl:'Prikkel → receptor → zenuwsignaal → hersenen → reactie'},
+  {fr:'centrale zenuwstelsel',nl:'Hersenen + ruggenmerg — verwerkt alle zenuwsignalen'},
+  {fr:'perifere zenuwstelsel',nl:'Alle zenuwen buiten hersenen en ruggenmerg — verbindt lichaam met CZS'},
+];
 
 // Grandes Lignes Ch.1 — ABEF woordenlijsten, exact uit SlimStampen
 const WORDS_A = [
@@ -747,11 +799,11 @@ function load() {
       done: s.done||{},
       stars: s.stars||0,
       open: s.open||'di17m',
-      quizRounds: s.quizRounds||{fr:0,ak:0,wis:0},
+      quizRounds: s.quizRounds||{fr:0,ak:0,wis:0,bio:0},
       wordKnown: s.wordKnown||{}
     };
   }
-  catch(e){return{done:{},stars:0,open:'di17m',quizRounds:{fr:0,ak:0,wis:0},wordKnown:{}};}
+  catch(e){return{done:{},stars:0,open:'di17m',quizRounds:{fr:0,ak:0,wis:0,bio:0},wordKnown:{}};}
 }
 function save(){localStorage.setItem(SK,JSON.stringify(st));}
 let st = load();
@@ -858,7 +910,7 @@ function showScore(){
   qz.lastWrong = qz.cards.filter((_,i)=>!qz.res[i]).map(c=>({fr:c.fr,nl:c.nl}));
 
   // Update quiz rounds counter
-  const key = qz.wordSet===WORDS?'fr':qz.wordSet===AK_WORDS?'ak':'wis';
+  const key = qz.wordSet===WORDS?'fr':qz.wordSet===AK_WORDS?'ak':qz.wordSet===BIO_WORDS?'bio':'wis';
   st.quizRounds[key] = (st.quizRounds[key]||0) + 1;
 
   // Track which words she knows
@@ -929,7 +981,7 @@ function render(){
           <div><div class="task-lbl">${t.e} ${t.l}</div>${t.s?`<div class="task-sub">${t.s}</div>`:''}</div>
         </li>`;
       }).join('');
-      const ctaHtml=b.cta?`<button class="btn ${b.cta.action==='quiz'||b.cta.action==='akquiz'||b.cta.action==='wisquiz'?'btn-blue':'btn-green'}" onclick="handleCta('${day.id}','${b.cta.action}',event)">${b.cta.label}</button>`:'';
+      const ctaHtml=b.cta?`<button class="btn ${b.cta.action==='quiz'||b.cta.action==='akquiz'||b.cta.action==='wisquiz'||b.cta.action==='bioquiz'?'btn-blue':'btn-green'}" onclick="handleCta('${day.id}','${b.cta.action}',event)">${b.cta.label}</button>`:'';
       return `<div class="subject-block">
         <div class="subject-title"><span class="subject-tag ${b.tagClass}">${b.tag.toUpperCase()}</span>${b.title}</div>
         ${stofHtml}
@@ -991,6 +1043,7 @@ function handleCta(dayId,action,e){
   if(action==='quiz') startQuiz(WORDS, null, false);
   if(action==='akquiz') startQuiz(AK_WORDS, null, true);
   if(action==='wisquiz') startQuiz(WIS_WORDS, null, true);
+  if(action==='bioquiz') startQuiz(BIO_WORDS, null, true);
 }
 
 // ── NAVIGATE TO NEXT TASK ────────────────────────────────────────────────────
@@ -1018,10 +1071,11 @@ function repeatWrong(){
 
 // ── QUIZ PROGRESS PANEL ──────────────────────────────────────────────────────
 function renderQuizProg(){
-  const rounds=st.quizRounds||{fr:0,ak:0,wis:0};
+  const rounds=st.quizRounds||{fr:0,ak:0,wis:0,bio:0};
   const MAX=5;
   const sets=[
     {key:'fr', icon:'🇫🇷', label:'Frans', total:WORDS.length},
+    {key:'bio', icon:'🔬', label:'Biologie', total:BIO_WORDS.length},
     {key:'wis', icon:'📐', label:'Wiskunde', total:WIS_WORDS.length},
     {key:'ak', icon:'🌍', label:'AK', total:AK_WORDS.length},
   ];
@@ -1029,12 +1083,14 @@ function renderQuizProg(){
   function knownCount(wordList){
     return wordList.filter(w=>(st.wordKnown[w.fr.substring(0,28)]||0)>=2).length;
   }
+  const wordListFor=(key)=>key==='fr'?WORDS:key==='ak'?AK_WORDS:key==='bio'?BIO_WORDS:WIS_WORDS;
   const html=sets.map(s=>{
     const n=Math.min(rounds[s.key]||0,MAX);
-    const known=knownCount(s.key==='fr'?WORDS:s.key==='ak'?AK_WORDS:WIS_WORDS);
+    const known=knownCount(wordListFor(s.key));
     const dots=Array(MAX).fill('').map((_,i)=>`<div class="qp-dot${i<n?' done':''}"></div>`).join('');
     const countLbl=n===0?'Nog niet geoefend':`${known}/${s.total} ✅`;
     return `<div class="qp-row"><span style="font-size:1rem">${s.icon}</span><span class="qp-label">${s.label}</span><div class="qp-dots">${dots}</div><span class="qp-count">${countLbl}</span></div>`;
+
   }).join('');
   document.getElementById('quizProg').innerHTML=html;
 }

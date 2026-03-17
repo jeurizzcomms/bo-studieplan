@@ -226,15 +226,14 @@ const DAYS = [
   icon:'🇫🇷', bg:'#58CC02', badge:'GEDAAN', bc:'b-done', status:'done',
   sub:'Frans SO voorbereid — NEGEN gehaald! 🏆',
   blocks:[{
-    title:'Frans SO voorbereiden', tag:'fa', tagClass:'tag-fa',
-    stof:`<strong>📋 SO inhoud (di 17)</strong>
-<ul><li>Luistertoets – gewoon rustig luisteren</li><li>Woordjes A+B (Frans→Nederlands EN Nederlands→Frans)</li><li>Dagen van de week (F↔N)</li><li>Lidwoord (le/la/les/un/une)</li><li>Cijfers 0 t/m 20 (F↔N)</li></ul>`,
+    title:'Frans SO – gedaan! 🏆', tag:'fa', tagClass:'tag-fa',
+    stof:null,
     tasks:[
-      {id:'t1', e:'🃏', l:'Woordjes oefenen met de flashcards', s:'Klik op "Woordjes oefenen" hieronder'},
-      {id:'t2', e:'✍️', l:'Fout-woordjes 3x opschrijven', s:'Dan onthoud je ze beter'},
-      {id:'t3', e:'😴', l:'Uitgerust zijn is ook leren', s:'Je bent er klaar voor!'},
+      {id:'t1', e:'✅', l:'SO voorbereid', s:'Woordjes geleerd, uitgerust geweest'},
+      {id:'t2', e:'🏆', l:'Frans SO gemaakt', s:'Uur 6 – en gewonnen!'},
+      {id:'t3', e:'🎉', l:'NEGEN gehaald!', s:'Zo doe je dat 💪'},
     ],
-    cta:{label:'🃏 Woordjes oefenen', action:'quiz'}
+    cta:null
   }]
 },{
   id:'di17m2', name:'Dinsdag middag', date:'17 maart – NEGEN voor Frans! 🎉',
@@ -903,8 +902,9 @@ function render(){
   track.innerHTML='';
   DAYS.forEach((day,i)=>{
     const tasks=day.blocks.flatMap(b=>b.tasks);
-    const dc=tasks.filter(t=>st.done[t.id]).length;
-    const allDone=dc===tasks.length&&tasks.length>0;
+    const forceDone=day.status==='done';
+    const dc=forceDone?tasks.length:tasks.filter(t=>st.done[t.id]).length;
+    const allDone=forceDone||(dc===tasks.length&&tasks.length>0);
     const isOpen=st.open===day.id;
 
     if(i>0){const c=document.createElement('div');c.className='connector';track.appendChild(c);}
@@ -923,7 +923,7 @@ function render(){
     const blocksHtml=day.blocks.map(b=>{
       const stofHtml=b.stof?`<div class="stof-box">${b.stof}</div>`:'';
       const tasksHtml=b.tasks.map(t=>{
-        const done=st.done[t.id];
+        const done=forceDone||st.done[t.id];
         return `<li class="task${done?' done':''}" onclick="toggle('${t.id}',event)">
           <div class="chk">${done?'✓':''}</div>
           <div><div class="task-lbl">${t.e} ${t.l}</div>${t.s?`<div class="task-sub">${t.s}</div>`:''}</div>

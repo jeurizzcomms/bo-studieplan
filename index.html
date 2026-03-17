@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bo's Studieplan 🌟</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --green:#58CC02; --green-dk:#46A302;
+  --blue:#1CB0F6;  --blue-dk:#0099D9;
+  --orange:#FF9600; --orange-dk:#CC7A00;
+  --red:#FF4B4B;   --purple:#A560E8;
+  --yellow:#FFC800; --teal:#00C9A7;
+  --gray:#AFAFAF;  --gray-lt:#F7F7F7;
+  --text:#3C3C3C;
+}
+body { font-family:'Segoe UI',-apple-system,sans-serif; background:linear-gradient(160deg,#667eea,#764ba2); min-height:100vh; padding:12px 12px 40px; color:var(--text); }
+
+/* HEADER */
+.hdr { text-align:center; color:#fff; padding:18px 0 12px; }
+.hdr h1 { font-size:1.9rem; font-weight:900; text-shadow:0 2px 8px rgba(0,0,0,.3); }
+.hdr p  { font-size:.85rem; opacity:.8; margin-top:3px; }
+
+/* PROGRESS */
+.prog-wrap { background:rgba(255,255,255,.22); border-radius:10px; height:11px; max-width:360px; margin:0 auto 5px; overflow:hidden; }
+.prog-fill  { height:100%; background:var(--yellow); border-radius:10px; transition:width .5s; }
+.prog-lbl   { text-align:center; font-size:.78rem; color:rgba(255,255,255,.8); margin-bottom:12px; }
+
+/* STARS BAR */
+.stars-bar { background:rgba(255,255,255,.18); border-radius:20px; padding:9px 18px; display:flex; align-items:center; justify-content:center; gap:8px; color:#fff; font-weight:700; font-size:1rem; max-width:320px; margin:0 auto 14px; }
+
+/* MOTIVATION */
+.motiv { background:rgba(255,255,255,.14); border-radius:14px; padding:10px 14px; color:#fff; text-align:center; font-size:.88rem; font-weight:600; max-width:380px; margin:0 auto 14px; line-height:1.4; }
+
+/* TRACK */
+.track { max-width:420px; margin:0 auto; }
+.connector { width:4px; height:18px; background:rgba(255,255,255,.35); border-radius:2px; margin:0 auto; }
+
+/* DAY NODE */
+.day { width:100%; background:#fff; border-radius:20px; padding:14px 16px; box-shadow:0 4px 18px rgba(0,0,0,.15); cursor:pointer; border:3px solid transparent; transition:transform .12s; }
+.day:active { transform:scale(.98); }
+.day.today  { border-color:var(--yellow); box-shadow:0 4px 22px rgba(255,200,0,.35); }
+.day.done   { border-color:var(--green); background:#F2FCE8; }
+.day.exam   { border-color:var(--red); }
+.day.locked { opacity:.5; cursor:default; }
+
+.day-hdr { display:flex; align-items:center; gap:11px; }
+.day-icon { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; box-shadow:0 3px 8px rgba(0,0,0,.15); }
+.day-info { flex:1; min-width:0; }
+.day-name { font-weight:800; font-size:.95rem; }
+.day-date { font-size:.75rem; color:var(--gray); margin-top:1px; }
+.day-sub  { font-size:.82rem; color:#666; font-weight:600; margin-top:2px; }
+.day-prog { font-size:.75rem; color:#999; margin-top:2px; }
+
+.badge { font-size:.65rem; font-weight:700; padding:3px 8px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+.b-today  { background:var(--yellow); color:#333; }
+.b-done   { background:var(--green);  color:#fff; }
+.b-exam   { background:var(--red);    color:#fff; }
+.b-free   { background:var(--blue);   color:#fff; }
+.b-toets  { background:var(--purple); color:#fff; }
+.b-morgen { background:var(--orange); color:#fff; }
+
+/* EXPANDED */
+.day-body { display:none; margin-top:12px; border-top:2px solid #f0f0f0; padding-top:12px; }
+.day-body.open { display:block; }
+
+/* SUBJECT BLOCK */
+.subject-block { background:var(--gray-lt); border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+.subject-block:last-child { margin-bottom:0; }
+.subject-title { font-weight:800; font-size:.92rem; display:flex; align-items:center; gap:7px; margin-bottom:8px; }
+.subject-tag { font-size:.65rem; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; }
+.tag-bio { background:#1CB0F6; } .tag-na { background:#FF9600; } .tag-ak { background:#58CC02; }
+.tag-ne { background:#A560E8; } .tag-wi { background:#FF4B4B; } .tag-fa { background:#00C9A7; }
+.tag-ge { background:#FFC800; color:#333; } .tag-du { background:#667eea; }
+
+.task-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.task { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; background:#fff; border-radius:12px; cursor:pointer; border:2px solid transparent; transition:background .12s; }
+.task:active { transform:scale(.98); }
+.task.done  { background:#EEFFDC; border-color:var(--green); }
+.task.done .task-lbl { text-decoration:line-through; color:var(--gray); }
+.chk { width:26px; height:26px; border-radius:50%; border:3px solid var(--gray); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.9rem; transition:all .2s; margin-top:1px; }
+.task.done .chk { background:var(--green); border-color:var(--green); color:#fff; }
+.task-lbl  { font-size:.88rem; font-weight:600; line-height:1.3; }
+.task-sub  { font-size:.76rem; color:#888; margin-top:2px; font-weight:400; }
+
+/* TOETSSTOF BOX */
+.stof-box { background:#EEF6FF; border-left:4px solid var(--blue); border-radius:0 10px 10px 0; padding:10px 12px; margin-bottom:8px; font-size:.8rem; line-height:1.6; }
+.stof-box strong { display:block; margin-bottom:4px; color:var(--blue-dk); font-size:.82rem; }
+.stof-box ul { padding-left:16px; }
+.stof-box li { margin-bottom:2px; }
+.tip-box { background:#FFF8E8; border-left:4px solid var(--orange); border-radius:0 10px 10px 0; padding:10px 12px; margin-bottom:8px; font-size:.8rem; line-height:1.6; }
+.tip-box strong { display:block; margin-bottom:4px; color:var(--orange-dk); }
+
+/* BUTTONS */
+.btn { display:block; width:100%; padding:14px; border:none; border-radius:14px; font-size:1rem; font-weight:800; cursor:pointer; margin-top:10px; text-align:center; transition:transform .1s; }
+.btn:active { transform:translateY(2px); }
+.btn-green  { background:var(--green);  color:#fff; box-shadow:0 4px 0 var(--green-dk); }
+.btn-blue   { background:var(--blue);   color:#fff; box-shadow:0 4px 0 var(--blue-dk); }
+.btn-orange { background:var(--orange); color:#fff; box-shadow:0 4px 0 var(--orange-dk); }
+
+.day-reward { display:none; text-align:center; margin-top:10px; font-size:1.4rem; animation:pop .4s ease; }
+@keyframes pop { 0%{transform:scale(0);opacity:0} 60%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
+
+/* MODAL */
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:100; align-items:center; justify-content:center; padding:14px; }
+.overlay.open { display:flex; }
+.modal { background:#fff; border-radius:22px; padding:22px; width:100%; max-width:400px; max-height:92vh; overflow-y:auto; position:relative; }
+.modal-close { position:absolute; top:14px; right:14px; background:var(--gray-lt); border:none; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.modal-ttl { font-size:1.25rem; font-weight:900; text-align:center; margin-bottom:4px; }
+.modal-sub { text-align:center; font-size:.8rem; color:var(--gray); margin-bottom:16px; }
+
+/* FLASHCARD */
+.fc-area { perspective:800px; margin-bottom:14px; }
+.fc { width:100%; height:155px; position:relative; cursor:pointer; transform-style:preserve-3d; transition:transform .5s; }
+.fc.flipped { transform:rotateY(180deg); }
+.fc-front, .fc-back { position:absolute; inset:0; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; backface-visibility:hidden; -webkit-backface-visibility:hidden; font-weight:800; padding:18px; text-align:center; }
+.fc-front { background:linear-gradient(135deg,var(--blue),var(--purple)); color:#fff; font-size:1.7rem; }
+.fc-front .hint { font-size:.72rem; opacity:.7; margin-top:6px; font-weight:400; }
+.fc-back  { background:linear-gradient(135deg,var(--green),var(--teal)); color:#fff; font-size:1.5rem; transform:rotateY(180deg); }
+.fc-ctr   { text-align:center; font-size:.8rem; color:var(--gray); margin-bottom:10px; }
+.mini-dots { display:flex; gap:4px; justify-content:center; flex-wrap:wrap; margin-bottom:12px; }
+.dot { width:11px; height:11px; border-radius:50%; background:var(--gray-lt); border:2px solid var(--gray); }
+.dot.ok { background:var(--green); border-color:var(--green); }
+.dot.no { background:var(--red);   border-color:var(--red); }
+.fc-btns { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.fc-btn { padding:13px; border:none; border-radius:12px; font-size:.95rem; font-weight:700; cursor:pointer; }
+.fc-btn.ok { background:var(--green); color:#fff; box-shadow:0 3px 0 var(--green-dk); }
+.fc-btn.no { background:var(--red);   color:#fff; box-shadow:0 3px 0 #CC0000; }
+.score-area { display:none; text-align:center; padding:16px 0; }
+.score-big  { font-size:2.8rem; font-weight:900; color:var(--green); }
+.score-msg  { font-size:.9rem; color:var(--gray); margin-top:4px; }
+.score-stars{ font-size:1.8rem; margin:10px 0; }
+
+/* MODE BUTTONS */
+.mode-btn { padding:9px 13px; border:2px solid var(--gray); border-radius:10px; background:#fff; font-size:.85rem; font-weight:700; cursor:pointer; flex:1; min-width:0; }
+.mode-btn.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+
+/* CONFETTI */
+.cp { position:fixed; pointer-events:none; z-index:999; animation:fall 1.5s ease-in forwards; }
+@keyframes fall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+
+/* RESUME BUTTON */
+.btn-resume { display:block; width:100%; max-width:420px; margin:0 auto 10px; background:var(--yellow); color:#333; border:none; border-radius:18px; padding:17px; font-size:1.08rem; font-weight:900; cursor:pointer; box-shadow:0 5px 0 var(--orange-dk); transition:transform .1s; }
+.btn-resume:active { transform:translateY(3px); box-shadow:0 2px 0 var(--orange-dk); }
+
+/* QUIZ PROGRESS PANEL */
+.quiz-prog { max-width:420px; margin:0 auto 10px; background:rgba(255,255,255,.16); border-radius:14px; padding:10px 14px; }
+.qp-row { display:flex; align-items:center; gap:7px; margin-bottom:5px; color:#fff; font-size:.83rem; font-weight:600; }
+.qp-row:last-child { margin-bottom:0; }
+.qp-label { min-width:80px; }
+.qp-dots { display:flex; gap:4px; flex:1; }
+.qp-dot { width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,.25); }
+.qp-dot.done { background:var(--yellow); }
+.qp-count { font-size:.76rem; opacity:.75; min-width:70px; text-align:right; }
+</style>
+</head>
+<body>
+<div id="cc"></div>
+
+<!-- FLASHCARD MODAL -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="qArea">
+      <div class="modal-ttl" id="modalTtl">🇫🇷 Frans Overhoren</div>
+      <div class="modal-sub" id="modalSub">Kies een modus:</div>
+      <div id="modeBar" style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="mode-btn active" id="m_fn" onclick="setMode('fn')">🇫🇷→🇳🇱</button>
+        <button class="mode-btn" id="m_nf" onclick="setMode('nf')">🇳🇱→🇫🇷</button>
+        <button class="mode-btn" id="m_both" onclick="setMode('both')">🔀 Beide</button>
+        <button class="mode-btn" id="m_listen" onclick="setMode('listen')">🔊 Luisteren</button>
+      </div>
+      <div class="mini-dots" id="dots"></div>
+      <div class="fc-ctr" id="fcCtr"></div>
+      <div class="fc-area">
+        <div class="fc" id="fc" onclick="flip()">
+          <div class="fc-front"><div id="fcF">—</div><div class="hint" id="fcHint">Tik om te zien ↓</div></div>
+          <div class="fc-back"><div id="fcB">—</div></div>
+        </div>
+      </div>
+      <button id="speakBtn" class="btn" style="background:#667eea;color:#fff;box-shadow:0 4px 0 #4a56c8;margin-top:0;display:none" onclick="speakCurrent()">🔊 Hoor het woord</button>
+      <div id="flipBtn"><button class="btn btn-blue" onclick="flip()" style="margin-top:8px">🔄 Omdraaien</button></div>
+      <div class="fc-btns" id="answerBtns" style="display:none">
+        <button class="fc-btn no" onclick="ans(false)">❌ Fout</button>
+        <button class="fc-btn ok"  onclick="ans(true)">✅ Goed!</button>
+      </div>
+    </div>
+    <div class="score-area" id="scoreArea">
+      <div style="font-size:2.5rem">🏆</div>
+      <div class="score-big" id="scoreNum"></div>
+      <div class="score-msg"  id="scoreMsg"></div>
+      <div class="score-stars" id="scoreStars"></div>
+      <button class="btn btn-orange" id="repeatBtn" onclick="startQuiz()" style="margin-top:8px">🔁 Opnieuw (alles)</button>
+      <button class="btn" id="repeatWrongBtn" onclick="repeatWrong()" style="margin-top:8px;display:none;background:#FF4B4B;color:#fff;box-shadow:0 4px 0 #CC0000">🔁 Herhaal foute woordjes</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="hdr">
+  <h1>🌟 Bo's Studieplan</h1>
+  <p>Toetsweek 3 — 26 maart t/m 1 april 2026</p>
+</div>
+<div id="fransBanner" style="max-width:420px;margin:0 auto 14px;background:linear-gradient(135deg,#FFD700,#FF9600);border-radius:20px;padding:18px 20px;text-align:center;box-shadow:0 6px 0 #CC7A00;animation:pop .5s ease">
+  <div style="font-size:2.2rem">🏆🇫🇷🏆</div>
+  <div style="font-size:1.3rem;font-weight:900;color:#333;margin:4px 0">NEGEN voor Frans SO!</div>
+  <div style="font-size:.9rem;color:#555;font-weight:600">Super Bo! Nu door naar de rest 💪</div>
+</div>
+
+<div class="prog-wrap"><div class="prog-fill" id="pFill" style="width:0%"></div></div>
+<div class="prog-lbl" id="pLbl">Loading…</div>
+<div class="motiv" id="motiv"></div>
+<div class="stars-bar">⭐ <span id="totalStars">0</span> sterren verdiend</div>
+<button class="btn-resume" id="resumeBtn" onclick="goToNextTask()">📍 Waar ben ik gebleven?</button>
+<div class="quiz-prog" id="quizProg"></div>
+
+<div class="track" id="track"></div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+
+const DAYS = [
+{
+  id:'di17m', name:'Dinsdag ochtend', date:'17 maart – Frans SO voorbereid ✅',
+  icon:'🇫🇷', bg:'#58CC02', badge:'GEDAAN', bc:'b-done', status:'done',
+  sub:'Frans SO voorbereid — NEGEN gehaald! 🏆',
+  blocks:[{
+    title:'Frans SO voorbereiden', tag:'fa', tagClass:'tag-fa',
+    stof:`<strong>📋 SO inhoud (di 17)</strong>
+<ul><li>Luistertoets – gewoon rustig luisteren</li><li>Woordjes A+B (Frans→Nederlands EN Nederlands→Frans)</li><li>Dagen van de week (F↔N)</li><li>Lidwoord (le/la/les/un/une)</li><li>Cijfers 0 t/m 20 (F↔N)</li></ul>`,
+    tasks:[
+      {id:'t1', e:'🃏', l:'Woordjes oefenen met de flashcards', s:'Klik op "Woordjes oefenen" hieronder'},
+      {id:'t2', e:'✍️', l:'Fout-woordjes 3x opschrijven', s:'Dan onthoud je ze beter'},
+      {id:'t3', e:'😴', l:'Uitgerust zijn is ook leren', s:'Je bent er klaar voor!'},
+    ],
+    cta:{label:'🃏 Woordjes oefenen', action:'quiz'}
+  }]
+},{
+  id:'di17m2', name:'Dinsdag middag', date:'17 maart – NEGEN voor Frans! 🎉',
+  icon:'🏆', bg:'#FFD700', badge:'VANDAAG', bc:'b-today', status:'today',
+  sub:'Frans gehaald met een 9 — vanavond flink aan de slag!',
+  blocks:[{
+    title:'Biologie H3 – vandaag H3.1 + H3.2 leren', tag:'bio', tagClass:'tag-bio',
+    stof:`<strong>🎉 NEGEN voor Frans — nu doorpakken!</strong><br>Je hebt vandaag de rest van de dag. Gebruik die tijd. Biologie toets is wo 1 april — maar hoe eerder je start, hoe relaxter de toetsweek wordt.<br><br><strong>📋 Toetsstof BIO</strong><ul><li>H3.1 – Zintuigen en Prikkels</li><li>H3.2 – Het Oog</li><li>H3.3 – Het Oor</li><li>H3.4 – Huid en andere zintuigen</li><li>H3.5 – Overzicht</li><li>Oefentoets blz. 208</li></ul>`,
+    tasks:[
+      {id:'t4', e:'🏆', l:'Frans SO: NEGEN! 🎉 Trots zijn mag.', s:'Even vieren — dan aan de slag!'},
+      {id:'t5', e:'👁️', l:'H3.1 lezen: Zintuigen & Prikkels (45 min)', s:'Lees actief: onderstreep, schrijf begrippen over in je schrift'},
+      {id:'t6', e:'👁️', l:'H3.2 lezen: Het Oog (45 min)', s:'Schets het oog na — zo onthoud je de onderdelen veel beter'},
+      {id:'t6b', e:'✅', l:'Opdrachten H3.1 + H3.2 nakijken (15 min)', s:'Gebruik het nakijkboekje — markeer wat fout was'},
+      {id:'t6c', e:'🔢', l:'Wiskunde: 20 min oefensommen (toets al vr 27!)', s:'Pak je schrift, pak een som, schrijf alles op'},
+    ],
+    cta:{label:'👁️ Biologie starten', action:'start'}
+  }]
+},{
+  id:'wo18', name:'Woensdag', date:'18 maart',
+  icon:'👁️', bg:'#1CB0F6', badge:'BIO + WI', bc:'b-toets', status:'normal',
+  sub:'Biologie H3.3–H3.5 + Wiskunde',
+  blocks:[{
+    title:'Biologie – H3.3 t/m H3.5 (H3.1+3.2 gisteren gedaan!)', tag:'bio', tagClass:'tag-bio',
+    stof:`<strong>📋 Toetsstof BIO (toets wo 1 april)</strong>
+<ul><li>H3.3 – Het Oor</li><li>H3.4 – Huid en andere zintuigen</li><li>H3.5 – Overzicht/samenvatting</li><li>Oefentoets "Test jezelf" blz. 208</li><li>biologiepagina.nl/Brugklasnieuw/Waarnemen/Oefenen</li></ul>`,
+    tasks:[
+      {id:'t7', e:'👂', l:'H3.3 lezen: Het Oor (45 min)', s:'Schets het oor na in je schrift — buitenoor, middenoor, binnenoor'},
+      {id:'t8', e:'🤚', l:'H3.4 + H3.5 lezen: Huid + overzicht (30 min)', s:'Schrijf de zintuigen en functies op een blaadje'},
+      {id:'t9', e:'📝', l:'Test jezelf blz. 208 maken (20 min)', s:'Pen en papier, echt proberen — dan nakijken'},
+    ],
+    cta:{label:'▶️ Biologie verder', action:'start'}
+  },{
+    title:'Wiskunde – eerste grote oefening', tag:'wi', tagClass:'tag-wi',
+    stof:`<strong>📋 Toetsstof WI (toets vr 27 maart – over 9 dagen!)</strong><ul><li>Gebruik je schrift en de oefentoets in ELO</li><li>Schrijf áltijd tussenstappen op</li></ul>`,
+    tasks:[
+      {id:'t9b', e:'🔢', l:'Wiskunde: oefensommen uit schrift overdoen (45 min)', s:'Begin bij het begin — schrijf élke stap op'},
+      {id:'t9c', e:'❓', l:'Vragen opschrijven die je niet snapt', s:'Stel ze donderdag bij de leerles'},
+    ],
+    cta:{label:'📐 Wiskunde begrippen oefenen', action:'wisquiz'}
+  }]
+},{
+  id:'do19', name:'Donderdag', date:'19 maart – leerles op school!',
+  icon:'🔢', bg:'#FF4B4B', badge:'WISKUNDE', bc:'b-toets', status:'normal',
+  sub:'Wiskunde leerles + thuis grote oefensessie',
+  blocks:[{
+    title:'Wiskunde – leerles + serieuse thuissessie', tag:'wi', tagClass:'tag-wi',
+    stof:`<strong>📋 Toetsstof WI (toets vr 27 maart — over 8 dagen!)</strong>
+<ul><li>Gebruik je schrift en de oefentoets in ELO</li><li>Schrijf áltijd tussenstappen op — dat levert punten op!</li></ul>`,
+    tasks:[
+      {id:'t10', e:'🏫', l:'Leerles: stel je vragen, schrijf alles op', s:'Dit is je kans — vraag wat je niet begrijpt'},
+      {id:'t11', e:'🔢', l:'Thuis: oefentoets ELO echt maken (60 min)', s:'Pen en papier — niet spieken, dan nakijken'},
+      {id:'t12', e:'✅', l:'Fouten analyseren: begrijp je waarom? (20 min)', s:'Fouten die je begrijpt, maak je nooit meer'},
+      {id:'t12b', e:'📐', l:'Flashcards wiskunde begrippen herhalen', s:'Formules moeten er in zitten voor de toets'},
+    ],
+    cta:{label:'📐 Wiskunde begrippen oefenen', action:'wisquiz'}
+  },{
+    title:'NaStec – vandaag starten (toets ma 30!)', tag:'na', tagClass:'tag-na',
+    stof:`<strong>📋 Toetsstof NaStec (toets ma 30 maart)</strong><ul><li>Geheel H3 – "De wereld in formules"</li><li>Formules, berekeningen, eenheden</li></ul>`,
+    tasks:[
+      {id:'t12c', e:'⚗️', l:'NaStec H3: samenvatting lezen + formules opschrijven (45 min)', s:'Schrijf elke formule met uitleg in je eigen woorden op'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  }]
+},{
+  id:'vr20', name:'Vrijdag', date:'20 maart – leerles op school!',
+  icon:'🌋', bg:'#58CC02', badge:'AK + NASTEC', bc:'b-toets', status:'normal',
+  sub:'AK leerles + NaStec + Wiskunde herhalen',
+  blocks:[{
+    title:'Leerles: AK + thuis verdiepen', tag:'ak', tagClass:'tag-ak',
+    stof:`<strong>📋 Toetsstof AK (toets ma 30 maart)</strong>
+<ul><li>H4 Natuurrampen in Japan – par. 1 t/m 5 (blz. 50-59)</li><li>Begrippen blz. 60-61 (zie uitsluitlijst!)</li><li>Basisboek BB61, BB98, BB101, BB105</li><li>Topografie Nederland</li></ul>`,
+    tasks:[
+      {id:'t13', e:'🏫', l:'Leerles: AK par. 1-3 actief lezen (blz. 50-55)', s:'Noteer de begrippen in je schrift'},
+      {id:'t13b', e:'🌋', l:'Thuis: AK par. 4-5 + begrippen leren (45 min)', s:'Begrippen blz. 60-61 — cover en test jezelf'},
+      {id:'t13c', e:'🌍', l:'Topografie Nederland: 1 keer oefenen (20 min)', s:'Gebruik een blinde kaart'},
+    ],
+    cta:{label:'🌍 AK begrippen flashcards', action:'akquiz'}
+  },{
+    title:'NaStec – formules inslijpen', tag:'na', tagClass:'tag-na',
+    stof:`<strong>📋 Toetsstof NaStec (toets ma 30 maart)</strong>
+<ul><li>Geheel H3 – "De wereld in formules"</li><li>Formules, berekeningen, eenheden</li></ul>`,
+    tasks:[
+      {id:'t14', e:'⚗️', l:'NaStec H3: formules uit je hoofd leren (45 min)', s:'Schrijf ze steeds op zonder te kijken — net zolang tot je ze kent'},
+      {id:'t15', e:'🔢', l:'Oefensommen H3 maken (30 min)', s:'Schrijf tussenstappen op'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  },{
+    title:'Wiskunde – extra ronde', tag:'wi', tagClass:'tag-wi',
+    stof:null,
+    tasks:[
+      {id:'t15b', e:'🔢', l:'Wiskunde: moeilijke sommen nog een keer (30 min)', s:'Toets morgen over een week — herhaling is key'},
+    ],
+    cta:{label:'📐 Wiskunde begrippen flashcards', action:'wisquiz'}
+  }]
+},{
+  id:'za21', name:'Zaterdag', date:'21 maart',
+  icon:'⚗️', bg:'#FF9600', badge:'WEEKEND', bc:'b-free', status:'normal',
+  sub:'Grote studiedag: NaStec + AK + Wiskunde',
+  blocks:[{
+    title:'NaStec – alles herhalen + toets simulatie', tag:'na', tagClass:'tag-na',
+    stof:null,
+    tasks:[
+      {id:'t16', e:'⚗️', l:'NaStec H3: formules uit je hoofd reproduceren (45 min)', s:'Boek dicht, schrijf alle formules op. Check dan pas'},
+      {id:'t17', e:'🔢', l:'Oefensommen H3 — hele reeks (45 min)', s:'Doe alsof het de echte toets is'},
+      {id:'t17b', e:'✅', l:'Nakijken + fouten opschrijven (15 min)', s:'Wat ga je morgen herhalen?'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  },{
+    title:'Aardrijkskunde – begrippen + topografie', tag:'ak', tagClass:'tag-ak',
+    stof:null,
+    tasks:[
+      {id:'t18', e:'🌋', l:'AK begrippen inslijpen met flashcards (45 min)', s:'Tot je ze allemaal goed hebt'},
+      {id:'t19', e:'🗺️', l:'Topografie Nederland: 2x blinde kaart invullen (30 min)', s:'Kaart printen of tekenen — schrijven onthoud je beter'},
+    ],
+    cta:{label:'🌍 AK begrippen flashcards', action:'akquiz'}
+  },{
+    title:'Wiskunde – oefentoets', tag:'wi', tagClass:'tag-wi',
+    stof:null,
+    tasks:[
+      {id:'t19b', e:'🔢', l:'Wiskunde: complete oefentoets uit ELO (60 min)', s:'Pen en papier, timer op 45 min — echt maken'},
+      {id:'t19c', e:'✅', l:'Nakijken + begrijpen wat fout ging (20 min)', s:'Vraag Bram als je het niet snapt'},
+    ],
+    cta:{label:'📐 Wiskunde begrippen flashcards', action:'wisquiz'}
+  }]
+},{
+  id:'zo22', name:'Zondag', date:'22 maart',
+  icon:'🔢', bg:'#A560E8', badge:'WEEKEND', bc:'b-free', status:'normal',
+  sub:'Grote studiedag: Wiskunde + Geschiedenis + Frans',
+  blocks:[{
+    title:'Wiskunde – tweede oefentoets + zwakke punten', tag:'wi', tagClass:'tag-wi',
+    stof:null,
+    tasks:[
+      {id:'t20', e:'🔢', l:'Wiskunde: tweede oefentoets (60 min)', s:'Maak een andere set sommen — timer op 45 min'},
+      {id:'t21', e:'✅', l:'Fouten analyseren: begrijp je waarom? (20 min)', s:'Dit zijn precies de dingen die op de toets komen'},
+    ],
+    cta:{label:'📐 Wiskunde begrippen flashcards', action:'wisquiz'}
+  },{
+    title:'Geschiedenis – leren en mindmap', tag:'ge', tagClass:'tag-ge',
+    stof:`<strong>📋 Toetsstof GES – Thema 3: Monniken en Ridders (toets di 31/3)</strong>
+<ul><li>Tijdsprong: samenvatting/mindmap monniken en ridders</li><li>Les 2: De macht van Karel de Grote</li><li>Les 3: Het leenstelsel (begrippen + bronnenopdracht)</li><li>Les 4: Vuile handen – middeleeuws dorp (begrippen)</li></ul>`,
+    tasks:[
+      {id:'t22', e:'🏛️', l:'Geschiedenis: samenvatting lezen + mindmap maken (60 min)', s:'Teken de mindmap in je schrift — Karel de Grote in het midden'},
+      {id:'t22b', e:'📝', l:'Begrippen opschrijven + cover-test (30 min)', s:'Dek de uitleg af — weet je het nog?'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  },{
+    title:'Frans – woordjes herhalen', tag:'fa', tagClass:'tag-fa',
+    stof:null,
+    tasks:[
+      {id:'t22c', e:'🃏', l:'Frans woordjes E+F oefenen met flashcards (30 min)', s:'PW is wo 1 april — dit zijn de nieuwe woordjes'},
+    ],
+    cta:{label:'🃏 Frans flashcards', action:'quiz'}
+  }]
+},{
+  id:'ma23', name:'Maandag', date:'23 maart',
+  icon:'🏛️', bg:'#FFC800', badge:'LEERDAG', bc:'b-toets', status:'normal',
+  sub:'Geschiedenis herhaling + Biologie herhaling + Frans',
+  blocks:[{
+    title:'Geschiedenis – herhalen en toets simuleren', tag:'ge', tagClass:'tag-ge',
+    stof:null,
+    tasks:[
+      {id:'t23', e:'🏛️', l:'Geschiedenis: mindmap uit hoofd natekenen (30 min)', s:'Boek dicht — teken en schrijf zo veel je weet'},
+      {id:'t24', e:'✅', l:'Oefenvragen maken uit de methode (45 min)', s:'Check daarna — begrijp je waarom iets fout was?'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  },{
+    title:'Biologie – grote herhaling', tag:'bio', tagClass:'tag-bio',
+    stof:null,
+    tasks:[
+      {id:'t25', e:'👁️', l:'Bio H3 herhalen: cover-test alle paragrafen (45 min)', s:'Dek je aantekeningen af — wat weet je nog?'},
+      {id:'t26', e:'📝', l:'"Test jezelf" blz. 208 opnieuw maken (20 min)', s:'Beter dan gisteren? Dan zit het erin!'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  },{
+    title:'Frans – woordjes + avoir', tag:'fa', tagClass:'tag-fa',
+    stof:null,
+    tasks:[
+      {id:'t26b', e:'🃏', l:'Frans flashcards: alle ABEF woordjes (30 min)', s:'Focus op de woordjes die je steeds fout hebt'},
+      {id:'t26c', e:'✍️', l:'Avoir 10x opschrijven uit je hoofd', s:"j'ai – tu as – il a – nous avons – vous avez – ils ont"},
+    ],
+    cta:{label:'🃏 Frans flashcards', action:'quiz'}
+  }]
+},{
+  id:'di24', name:'Dinsdag', date:'24 maart',
+  icon:'✍️', bg:'#A560E8', badge:'LEERDAG', bc:'b-toets', status:'normal',
+  sub:'Nederlands ALLES (toets do 26 — overmorgen!)',
+  blocks:[{
+    title:'Nederlands – spelling & grammatica volledig', tag:'ne', tagClass:'tag-ne',
+    stof:`<strong>📋 Toetsstof NL (toets do 26 maart — over 2 dagen!)</strong>
+<ul><li>p. 190-191 – Meervoudsvorming</li><li>p. 192-193 – Bijvoeglijke naamwoorden</li><li>p. 194-197 – Werkwoordspelling ⚠️ moeilijkst!</li><li>p. 198-199 – Samenstellingen</li><li>p. 202 – Hoofdletters</li><li>p. 204-205 – Leestekens</li></ul>`,
+    tasks:[
+      {id:'t27', e:'✍️', l:'Meervoud + bijv. naamwoorden: regels leren + oefenen (45 min)', s:'Schrijf de regels op een blaadje, dan oefeningen maken'},
+      {id:'t28', e:'✍️', l:'Werkwoordspelling (p.194-197) — dit is het moeilijkste! (60 min)', s:'Doen/duwen/stam-methode — maak alle oefeningen'},
+      {id:'t29', e:'✍️', l:'Samenstellingen + hoofdletters + leestekens (30 min)', s:'p.198-205 — korter maar wel op de toets'},
+      {id:'t29b', e:'📝', l:'Zelf een mini-toets maken: 10 zinnen opschrijven (20 min)', s:'Schrijf zinnen en controleer je eigen spelling'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  },{
+    title:'Frans – grammatica', tag:'fa', tagClass:'tag-fa',
+    stof:null,
+    tasks:[
+      {id:'t29c', e:'🃏', l:'Frans: bezittelijk vnw. + lidwoorden leren (30 min)', s:'mon/ma/mes – ton/ta/tes – son/sa/ses – le/la/les/un/une/des'},
+    ],
+    cta:{label:'🃏 Frans flashcards', action:'quiz'}
+  }]
+},{
+  id:'wo25', name:'Woensdag', date:'25 maart – dag voor eerste toets!',
+  icon:'🔁', bg:'#00C9A7', badge:'HERHALING', bc:'b-toets', status:'normal',
+  sub:'NL final check + Frans + Wiskunde laatste keer',
+  blocks:[{
+    title:'Nederlands – laatste grote check', tag:'ne', tagClass:'tag-ne',
+    stof:null,
+    tasks:[
+      {id:'t30', e:'✍️', l:'NL: alle spellingregels overschrijven uit je hoofd (30 min)', s:'Schrijf elk onderdeel op een blaadje — zonder te kijken'},
+      {id:'t30b', e:'📝', l:'Werkwoordspelling: 20 extra zinnen oefenen (30 min)', s:'Dit is het moeilijkste onderdeel — one more time'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  },{
+    title:'Frans – woordjes + grammatica final', tag:'fa', tagClass:'tag-fa',
+    stof:`<strong>💡 PW is véél meer dan woordjes!</strong>
+<ul><li>Woordjes E+F (A+B ken je al van de SO)</li><li>Grammatica: avoir (j'ai/tu as/il a/nous avons/vous avez/ils ont)</li><li>Bezittelijk vnw: mon/ma/mes, ton/ta/tes, son/sa/ses</li><li>Zinnen C+G (phrases-clés in werkboek blz.30-31 + 46-47)</li></ul>`,
+    tasks:[
+      {id:'t31', e:'🃏', l:'Woordjes E+F flashcards tot je ze allemaal goed hebt (45 min)', s:'Focus op wat je fout had — herhaal die steeds'},
+      {id:'t31b', e:'✍️', l:'Avoir + bezittelijk vnw + lidwoorden opschrijven (20 min)', s:"j'ai – tu as – il a — mon/ma/mes — le/la/les/un/une/des"},
+      {id:'t32', e:'😴', l:'Voor 22:00 naar bed — morgen NL toets!', s:'Uitgerust brein = meer punten'},
+    ],
+    cta:{label:'🃏 Frans herhalen', action:'quiz'}
+  },{
+    title:'Wiskunde – allerlaatste check', tag:'wi', tagClass:'tag-wi',
+    stof:null,
+    tasks:[
+      {id:'t32b', e:'🔢', l:'Wiskunde: formules + begrippen herhalen (30 min)', s:'Toets morgen! Flashcards + schrift doorlopen'},
+    ],
+    cta:{label:'📐 Wiskunde begrippen flashcards', action:'wisquiz'}
+  }]
+},{
+  id:'do26', name:'Donderdag', date:'26 maart – TOETS Nederlands',
+  icon:'✍️', bg:'#A560E8', badge:'TOETS!', bc:'b-exam', status:'normal',
+  sub:'Nederlands toets les 1',
+  blocks:[{
+    title:'Toetsdag 1 – Nederlands', tag:'ne', tagClass:'tag-ne',
+    stof:null,
+    tasks:[
+      {id:'t33', e:'🍳', l:'Goed ontbijten + rustig naar school', s:'Je hebt het geleerd – vertrouw jezelf'},
+      {id:'t34', e:'✏️', l:'Nederlands toets – les 1', s:'Lees alles goed, neem de tijd!'},
+      {id:'t35', e:'🔢', l:'Na school: Wiskunde even doornemen', s:'Toets morgen – laatste check'},
+    ],
+    cta:null
+  }]
+},{
+  id:'vr27', name:'Vrijdag', date:'27 maart – TOETS Wiskunde',
+  icon:'🔢', bg:'#FF4B4B', badge:'TOETS!', bc:'b-exam', status:'normal',
+  sub:'Wiskunde toets les 1',
+  blocks:[{
+    title:'Toetsdag 2 – Wiskunde', tag:'wi', tagClass:'tag-wi',
+    stof:null,
+    tasks:[
+      {id:'t36', e:'🍳', l:'Goed ontbijten – hoofd helder', s:'Je hebt geoefend, dit lukt!'},
+      {id:'t37', e:'📐', l:'Wiskunde toets – les 1', s:'Schrijf tussenstappen op, dat levert punten op!'},
+      {id:'t38', e:'⚗️', l:'Weekend: NaStec + AK herhalen (ma 30 = dubbele toets!)', s:'Za 28 + zo 29 – niet vergeten!'},
+    ],
+    cta:null
+  }]
+},{
+  id:'za28', name:'Zaterdag', date:'28 maart',
+  icon:'⚗️', bg:'#FF9600', badge:'WEEKEND', bc:'b-free', status:'normal',
+  sub:'NaStec herhaling (ma 30 dubbele toetsdag!)',
+  blocks:[{
+    title:'NaStec – grote herhaling', tag:'na', tagClass:'tag-na',
+    stof:null,
+    tasks:[
+      {id:'t39', e:'⚗️', l:'NaStec H3: alles herhalen', s:'40 min – formules uit je hoofd'},
+      {id:'t40', e:'🔢', l:'Extra oefensommen maken', s:'30 min – focus op wat eerder fout ging'},
+    ],
+    cta:{label:'▶️ Beginnen', action:'start'}
+  }]
+},{
+  id:'zo29', name:'Zondag', date:'29 maart',
+  icon:'🌋', bg:'#58CC02', badge:'WEEKEND', bc:'b-free', status:'normal',
+  sub:'AK herhaling + topografie Nederland',
+  blocks:[{
+    title:'Aardrijkskunde – grote herhaling', tag:'ak', tagClass:'tag-ak',
+    stof:null,
+    tasks:[
+      {id:'t41', e:'🌋', l:'AK: alle begrippen nog één keer', s:'40 min – cover en test jezelf'},
+      {id:'t42', e:'🗺️', l:'Topografie Nederland oefenen', s:'Gebruik een blinde kaart'},
+      {id:'t43', e:'😴', l:'Vroeg naar bed – morgen twee toetsen!', s:'Uitgerust zijn is echt belangrijk'},
+    ],
+    cta:{label:'🌍 AK begrippen flashcards', action:'akquiz'}
+  }]
+},{
+  id:'ma30', name:'Maandag', date:'30 maart – DUBBELE TOETS!',
+  icon:'🏆', bg:'#FF9600', badge:'2 TOETSEN!', bc:'b-exam', status:'normal',
+  sub:'NaStec + AK les 1',
+  blocks:[{
+    title:'Toetsdag 3 + 4 – NaStec & AK', tag:'na', tagClass:'tag-na',
+    stof:null,
+    tasks:[
+      {id:'t44', e:'🍳', l:'Goed ontbijten – lange dag!', s:'Je bent voorbereid op beide vakken'},
+      {id:'t45', e:'⚗️', l:'NaStec toets – les 1', s:'Formules opschrijven, dan pas invullen'},
+      {id:'t46', e:'🌋', l:'AK toets – les 1', s:'Begrippen + Japan + topografie'},
+      {id:'t47', e:'🏛️', l:'Na school: Geschiedenis herhaling', s:'Toets morgen – laatste doorlezing'},
+    ],
+    cta:null
+  }]
+},{
+  id:'di31', name:'Dinsdag', date:'31 maart – TOETS Geschiedenis',
+  icon:'🏛️', bg:'#FFC800', badge:'TOETS!', bc:'b-exam', status:'normal',
+  sub:'Geschiedenis toets les 3',
+  blocks:[{
+    title:'Toetsdag 5 – Geschiedenis', tag:'ge', tagClass:'tag-ge',
+    stof:`<strong>📋 Toetsstof GES – Thema 3: Monniken en Ridders</strong>
+<ul><li>Tijdsprong: samenvatting/mindmap monniken en ridders</li><li>Les 2: De macht van Karel de Grote</li><li>Les 3: Het leenstelsel (begrippen + bronnenopdracht)</li><li>Les 4: Vuile handen – middeleeuws dorp (begrippen)</li></ul>`,
+    tasks:[
+      {id:'t48', e:'🍳', l:'Goed ontbijten', s:'Bijna klaar!'},
+      {id:'t49', e:'🏛️', l:'Geschiedenis toets – les 3', s:'Tijdlijn + begrippen: je kent ze!'},
+      {id:'t50', e:'📖', l:'Na school: Bio + Frans laatste prep', s:'Toets morgen – rustig doorlezen'},
+    ],
+    cta:null
+  }]
+},{
+  id:'wo1apr', name:'Woensdag', date:'1 april – TOETS Bio + Frans 🎊',
+  icon:'🎊', bg:'#A560E8', badge:'LAATSTE!', bc:'b-exam', status:'normal',
+  sub:'Biologie + Frans les 4 – dan ben je klaar!',
+  blocks:[{
+    title:'Toetsdag 6 + 7 – Biologie & Frans', tag:'bio', tagClass:'tag-bio',
+    stof:`<strong>📋 Frans PW – Chapitre 1 volledig</strong>
+<ul><li>Woordjes A, B, E, F – Frans↔Nederlands (beide richtingen!)</li><li>Grammatica D: lidwoord (le/la/les/un/une/des)</li><li>Grammatica H: persoonlijk vnw. + avoir (j'ai, tu as...) + bezittelijk vnw. (mon/ma/mes, ton/ta/tes, son/sa/ses)</li><li>Zinnen C + G (phrases-clés)</li><li>Getallen 0-20 (F↔N)</li></ul>
+<strong>📋 Biologie – H3 Zintuigen (alle paragrafen)</strong>`,
+    tasks:[
+      {id:'t51', e:'🍳', l:'Goed ontbijten – laatste dag!', s:'Je hebt dit de hele toetsweek verdiend'},
+      {id:'t52', e:'👁️', l:'Biologie toets – les 4', s:'H3 Zintuigen: het oog, het oor, huid'},
+      {id:'t53', e:'🇫🇷', l:'Frans toets – les 4', s:'Woordjes + grammatica: vertrouw je geheugen'},
+      {id:'t54', e:'🎉', l:'KLAAR! Toetsweek voorbij!', s:'Je hebt het gedaan — trots zijn!'},
+    ],
+    cta:{label:'🃏 Laatste Frans check', action:'quiz'}
+  }]
+}];
+
+// Grandes Lignes Ch.1 — ABEF woordenlijsten, exact uit SlimStampen
+const WORDS_A = [
+  {fr:'la France',nl:'Frankrijk'},{fr:'les vacances',nl:'de vakantie'},
+  {fr:'la piscine',nl:'het zwembad'},{fr:'un peu',nl:'een beetje'},
+  {fr:'attention',nl:'pas op'},{fr:'je suis',nl:'ik ben'},
+  {fr:'tu parles',nl:'jij spreekt'},{fr:'français',nl:'Frans'},
+  {fr:'salut',nl:'hoi'},{fr:'bonjour',nl:'hallo, goedendag'},
+  {fr:'petit(e)',nl:'klein'},{fr:'grand(e)',nl:'groot'},
+  {fr:"d'accord",nl:'oké'},{fr:'mais',nl:'maar'},
+  {fr:'pour',nl:'voor'},{fr:'et',nl:'en'},
+  {fr:'bien',nl:'goed'},{fr:"j'aime",nl:'ik vind (het) leuk'},
+  {fr:'on joue',nl:'wij spelen'},{fr:"j'habite",nl:'ik woon'},
+  {fr:"Comment tu t'appelles?",nl:'Hoe heet jij?'},
+  {fr:"Je m'appelle Roos.",nl:'Ik heet Roos.'},
+  {fr:'Tu habites où?',nl:'Waar woon jij?'},
+  {fr:"J'habite à Zwolle.",nl:'Ik woon in Zwolle.'},
+];
+const WORDS_B = [
+  {fr:'la famille',nl:'de familie, het gezin'},{fr:'le frère',nl:'de broer'},
+  {fr:'la sœur',nl:'de zus'},{fr:'le chien',nl:'de hond'},
+  {fr:'le chat',nl:'de kat'},{fr:'le poisson',nl:'de vis'},
+  {fr:'le jour',nl:'de dag'},{fr:'la fille',nl:'het meisje'},
+  {fr:'le garçon',nl:'de jongen'},{fr:'le copain',nl:'de vriend'},
+  {fr:'la tente',nl:'de tent'},{fr:'il y a',nl:'er is, er zijn'},
+  {fr:'ici',nl:'hier'},{fr:'aussi',nl:'ook'},
+  {fr:'pourquoi',nl:'waarom'},{fr:'donc',nl:'dus'},
+  {fr:'on reste',nl:'wij blijven'},{fr:"c'est",nl:'het is'},
+  {fr:'bon appétit',nl:'eet smakelijk'},{fr:'et toi?',nl:'en jij?'},
+  {fr:'Bonjour, ça va?',nl:'Hallo, hoe gaat het?'},
+  {fr:'Ça va bien, et toi?',nl:'Het gaat goed, en met jou?'},
+  {fr:"C'est quoi?",nl:'Wat is dat?'},
+  {fr:"C'est un chien.",nl:'Dat is een hond.'},
+];
+const WORDS_E = [
+  {fr:'la plage',nl:'het strand'},{fr:'la mer',nl:'de zee'},
+  {fr:'le problème',nl:'het probleem'},{fr:'le message',nl:'het bericht'},
+  {fr:'le truc',nl:'het ding'},{fr:'regarde',nl:'kijk'},
+  {fr:'aider',nl:'helpen'},{fr:'on adore',nl:'wij zijn gek op'},
+  {fr:'merci',nl:'bedankt'},{fr:'de rien',nl:'niets te danken'},
+  {fr:"aujourd'hui",nl:'vandaag'},{fr:'demain',nl:'morgen'},
+  {fr:'voilà',nl:'hier is, hier zijn'},{fr:'alors',nl:'dan'},
+  {fr:'peut-être',nl:'misschien'},{fr:'beaucoup',nl:'veel'},
+  {fr:'dans',nl:'in'},{fr:'quelque chose',nl:'iets'},
+  {fr:'beau',nl:'mooi'},{fr:'super',nl:'super'},
+  {fr:'Quel est ton numéro de téléphone?',nl:'Wat is jouw telefoonnummer?'},
+  {fr:"Mon numéro, c'est le 06-14 07 18 5.",nl:'Mijn nummer is 06-14 07 18 5.'},
+  {fr:'Et toi, tu as quel âge?',nl:'En jij, hoe oud ben jij?'},
+  {fr:"Moi, j'ai 12 ans.",nl:'Ik ben 12 jaar.'},
+];
+const WORDS_F = [
+  {fr:'le père',nl:'de vader'},{fr:'la mère',nl:'de moeder'},
+  {fr:'le cousin',nl:'de neef'},{fr:'la cousine',nl:'de nicht'},
+  {fr:"l'oncle (m)",nl:'de oom'},{fr:'la tante',nl:'de tante'},
+  {fr:'le grand-père',nl:'de grootvader'},{fr:'la grand-mère',nl:'de grootmoeder'},
+  {fr:'le jardin',nl:'de tuin'},{fr:'la photo',nl:'de foto'},
+  {fr:'la musique',nl:'de muziek'},{fr:'le dessin',nl:'de tekening'},
+  {fr:'le prix',nl:'de prijs'},{fr:'drôle',nl:'grappig'},
+  {fr:'fou',nl:'gek'},{fr:'on rigole',nl:'wij lachen'},
+  {fr:'souvent',nl:'vaak'},{fr:'toujours',nl:'altijd'},
+  {fr:'avec',nl:'met'},{fr:'vraiment',nl:'echt'},
+  {fr:'Tu as un frère?',nl:'Heb je een broer?'},
+  {fr:"Oui, j'ai un frère, Romain.",nl:'Ja, ik heb een broer, Romain.'},
+  {fr:'Il a quel âge?',nl:'Hoe oud is hij?'},
+  {fr:'Il a 13 ans.',nl:'Hij is 13 jaar.'},
+  {fr:'Au revoir.',nl:'Tot ziens.'},{fr:'À plus.',nl:'Tot later.'},
+];
+
+// ABEF gecombineerd — alle 98 woorden voor de SO
+const WORDS = [...WORDS_A, ...WORDS_B, ...WORDS_E, ...WORDS_F];
+
+// KERN Wiskunde — begrippen & formules (H1-H4)
+const WIS_WORDS = [
+  // H1 Getallen
+  {fr:'grondtal',nl:'Het getal dat je vermenigvuldigt met zichzelf (bijv. in 2³ is 2 het grondtal)'},
+  {fr:'exponent',nl:'Geeft aan hoe vaak het grondtal met zichzelf vermenigvuldigd wordt (bijv. in 2³ is 3 de exponent)'},
+  {fr:'macht',nl:'Het resultaat van machtsverheffen (bijv. 2³ = 8 is een macht)'},
+  {fr:'teller',nl:'Het getal boven de deelstreep van een breuk'},
+  {fr:'noemer',nl:'Het getal onder de deelstreep van een breuk'},
+  {fr:'gelijknamige breuken',nl:'Breuken met dezelfde noemer (bijv. ½ en ¾ → 2/4 en 3/4)'},
+  {fr:'vereenvoudigen',nl:'Teller en noemer delen door hetzelfde getal (bijv. 4/6 → 2/3)'},
+  {fr:'volgorde van berekeningen',nl:'Haakjes eerst → machten → × en ÷ → + en −'},
+  // H2 Vlakke figuren
+  {fr:'loodrecht',nl:'Twee lijnen die een hoek van 90° maken (⊥)'},
+  {fr:'evenwijdig',nl:'Twee lijnen die dezelfde richting hebben en elkaar nooit snijden (∥)'},
+  {fr:'omtrek driehoek',nl:'Som van alle zijden: a + b + c'},
+  {fr:'oppervlakte driehoek',nl:'½ × grondlijn × hoogte'},
+  {fr:'omtrek rechthoek',nl:'2 × (lengte + breedte)'},
+  {fr:'oppervlakte rechthoek',nl:'lengte × breedte'},
+  {fr:'omtrek cirkel',nl:'π × diameter (of 2 × π × r)'},
+  {fr:'oppervlakte cirkel',nl:'π × r²'},
+  // H3 Verbanden
+  {fr:'assenstelsel',nl:'Vlak met een horizontale x-as en een verticale y-as'},
+  {fr:'coördinaten',nl:'De x- en y-waarde van een punt, geschreven als (x, y)'},
+  {fr:'kwadrant',nl:'Een van de vier vakken van het assenstelsel'},
+  {fr:'lineair verband',nl:'Verband waarbij de grafiek een rechte lijn is'},
+  {fr:'kwadratisch verband',nl:'Verband waarbij de grafiek een parabool is (y = ax²)'},
+  {fr:'formule',nl:'Een wiskundige regel, bijv. y = 2x + 3'},
+  // H4 Informatie verwerken
+  {fr:'gemiddelde',nl:'Som van alle waarden ÷ aantal waarden'},
+  {fr:'verhouding',nl:'Hoe twee getallen zich tot elkaar verhouden (bijv. 3:4)'},
+  {fr:'schaal',nl:'Verhouding tekening:werkelijkheid (bijv. 1:100)'},
+  {fr:'procent',nl:'Per honderd — 1% = 1/100 deel'},
+  {fr:'cirkeldiagram',nl:'Diagram in de vorm van een cirkel, verdeeld in sectoren'},
+];
+
+const AK_WORDS = [
+  {fr:'aardbeving',nl:'Schokkende beweging van de aardkorst door endogene krachten'},
+  {fr:'aardkorst',nl:'Dunne laag gesteente aan de buitenkant van de aarde (7 km onder oceanen, 30 km onder continenten)'},
+  {fr:'breuk',nl:'Barst of scheur in de aardkorst'},
+  {fr:'continentale plaat',nl:'Stuk aardkorst van lichter gesteente dat een continent vormt'},
+  {fr:'convectiestroom',nl:'Stroming van gesmolten gesteente binnen in de aarde'},
+  {fr:'convergentie',nl:'Het naar elkaar toe drijven van platen'},
+  {fr:'endogene kracht',nl:'Kracht die van binnenuit de aardkorst verandert'},
+  {fr:'eruptie',nl:'Vulkaanuitbarsting'},
+  {fr:'exogene kracht',nl:'Kracht die van buitenaf de aardkorst verandert'},
+  {fr:'lava',nl:'Magma dat door de aardkorst naar buiten is gestroomd'},
+  {fr:'magma',nl:'Heet, vloeibaar gesteente binnen in de aarde'},
+  {fr:'mid-oceanische rug',nl:'Langgerekte bergrug onder in de zee, ontstaan doordat magma omhoog komt bij uit-drijvende oceanische platen'},
+  {fr:'natuurramp',nl:'Ramp veroorzaakt door de natuur met veel slachtoffers en grote schade'},
+  {fr:'oceanische plaat',nl:'Stuk aardkorst van zwaarder gesteente, bedekt met oceaan'},
+  {fr:'plaat (= schol)',nl:'Stuk van de aardkorst'},
+  {fr:'reliëf',nl:'Hoogteverschillen in het landschap'},
+  {fr:'stratovulkaan',nl:'Vulkaan met steile hellingen, opgebouwd uit lagen lava en pyroclastisch materiaal'},
+  {fr:'subductie',nl:'Het wegduiken van een oceanische plaat onder een continentale plaat'},
+  {fr:'trog',nl:'Diepe kloof onder in de zee, ontstaan door subductie'},
+  {fr:'vulkaan',nl:'Berg ontstaan door het naar buiten stromen van lava'},
+  {fr:'epicentrum',nl:'Punt waar de aardbeving aan het oppervlak komt (boven het hypocentrum)'},
+  {fr:'hypocentrum',nl:'Plek diep in de aardkorst waar de aardbeving begint (aardbevingshaard)'},
+  {fr:'momentmagnitudeschaal',nl:'Schaal die de kracht van een aardbeving aangeeft'},
+  {fr:'schaal van Mercalli',nl:'Schaal die de schade en heftigheid van een aardbeving aangeeft'},
+  {fr:'seismoloog',nl:'Wetenschapper die aardbevingen bestudeert'},
+  {fr:'tsunami',nl:'Hoge vloedgolf veroorzaakt door een zeebeving'},
+  {fr:'zeebeving',nl:'Aardbeving waarvan het hypocentrum in de zee ligt'},
+  {fr:'evacueren',nl:'Een gebied verlaten omdat het er niet meer veilig is'},
+  {fr:'caldera',nl:'Zeer grote vulkaankrater ontstaan door instorting van het dak van een leeggelopen magmakamer'},
+  {fr:'fumarol',nl:'Scheur in de aardkorst waardoor hete gassen ontsnappen'},
+  {fr:'geiser',nl:'Heetwaterbron die met tussenpozen heet water en stoom de lucht in spuit'},
+  {fr:'geothermie',nl:'Aardwarmte'},
+  {fr:'krater',nl:'Groot gat met steile wanden in een vulkaan'},
+  {fr:'kratermeer',nl:'Meer ontstaan door het vollopen van een krater'},
+  {fr:'magmakamer',nl:'Ruimte in een vulkaan gevuld met magma'},
+  {fr:'pyroclastische stroom (= gloedwolk)',nl:'Hete gassen met stenen en as die de vulkaanhelling afrazen'},
+  {fr:'schildvulkaan',nl:'Lage, brede vulkaan met flauwe hellingen'},
+  {fr:'spleeteruptie',nl:'Vloeibare lava uit kilometerslange scheuren in de lithosfeer'},
+  {fr:'tufsteen',nl:'Vrij zachte steensoort van aan elkaar gekitte vulkanische as'},
+  {fr:'warmwaterbron (= hot spring)',nl:'Bron door geothermische verwarming van grondwater'},
+  {fr:'aardverschuiving',nl:'Het plotseling naar beneden schuiven van grote hoeveelheden grond langs hellingen'},
+  {fr:'hazard management',nl:'Beleid om schade bij natuurrampen te voorkomen'},
+  {fr:'orkaan (= tyfoon / cycloon)',nl:'Tropische storm met minimaal windkracht 12'},
+  {fr:'schaal van Beaufort',nl:'Schaal die de kracht van de wind aangeeft'},
+  {fr:'schaal van Saffir-Simpson',nl:'Schaal die de kracht van een orkaan aangeeft'},
+  {fr:'klimaatverandering',nl:'Geleidelijke of abrupte verandering in het klimaat door natuur en/of mens'},
+];
+
+const MOTIVS = [
+  '💪 Je kunt dit – één stap tegelijk.',
+  '🌟 Elke taak die je afvinkt telt!',
+  '🎯 Vandaag leren = morgen minder stress.',
+  '🔥 Kijk hoe ver je al bent – doe door!',
+  '🦁 Sterker dan een onvoldoende. Altijd.',
+  '🚀 Bijna bij de toetsweek – je bent er klaar voor!',
+  '🏆 De proefwerkweek haalt jou niet in!',
+  '🌈 Doorzetten – straks mag je trots zijn!',
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+const SK = 'bo_v4';
+function load() {
+  try {
+    const s=JSON.parse(localStorage.getItem(SK)||'{}');
+    return {
+      done: s.done||{},
+      stars: s.stars||0,
+      open: s.open||'di17m',
+      quizRounds: s.quizRounds||{fr:0,ak:0,wis:0},
+      wordKnown: s.wordKnown||{}
+    };
+  }
+  catch(e){return{done:{},stars:0,open:'di17m',quizRounds:{fr:0,ak:0,wis:0},wordKnown:{}};}
+}
+function save(){localStorage.setItem(SK,JSON.stringify(st));}
+let st = load();
+
+// ── QUIZ ─────────────────────────────────────────────────────────────────────
+let qz = {cards:[],idx:0,flipped:false,res:[],mode:'fn',wordSet:WORDS,isAK:false,lastWrong:[]};
+
+function setMode(m){
+  qz.mode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('m_'+m).classList.add('active');
+}
+
+function startQuiz(words, title, isAK){
+  if(words) { qz.wordSet=words; qz.isAK=!!isAK; }
+  // Update modal title
+  document.getElementById('modalTtl').textContent = qz.isAK ? '🌍 AK Begrippen Oefenen' : '🇫🇷 Frans Overhoren';
+  document.getElementById('modalSub').textContent = qz.isAK ? 'Begrip → definitie' : 'Kies een modus:';
+  document.getElementById('modeBar').style.display = qz.isAK ? 'none' : 'flex';
+  document.getElementById('speakBtn').style.display = qz.isAK ? 'none' : '';
+  if(qz.isAK) qz.mode='fn';
+  // Reset repeat button onclick
+  document.getElementById('repeatBtn').onclick = () => startQuiz();
+  // Each card gets a random direction for 'both' mode
+  const base=shuffle([...qz.wordSet]);
+  qz.cards=base.map(w=>{
+    let dir=qz.mode;
+    if(dir==='both') dir=Math.random()<.5?'fn':'nf';
+    if(dir==='listen') dir='fn'; // listen = hear FR, answer NL
+    return {...w, dir};
+  });
+  qz.idx=0; qz.flipped=false; qz.res=[];
+  document.getElementById('qArea').style.display='';
+  document.getElementById('scoreArea').style.display='none';
+  document.getElementById('modal').classList.add('open');
+  renderCard();
+}
+
+function closeModal(){
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  document.getElementById('modal').classList.remove('open');
+}
+
+function renderCard(){
+  const c=qz.cards[qz.idx];
+  const isListen=(qz.mode==='listen');
+  const front = c.dir==='fn' ? c.fr : c.nl;
+  const back  = c.dir==='fn' ? c.nl : c.fr;
+  const frontLang = c.dir==='fn' ? 'FR' : 'NL';
+
+  document.getElementById('fcF').textContent = isListen ? '🔊 ?' : front;
+  document.getElementById('fcB').textContent = back;
+  document.getElementById('fcHint').textContent = isListen ? 'Luister → tik om te zien' : qz.isAK ? 'Tik voor de definitie ↓' : 'Tik om te zien ↓';
+  document.getElementById('fcCtr').textContent=qz.isAK ? `Kaart ${qz.idx+1} van ${qz.cards.length}` : `Kaart ${qz.idx+1} van ${qz.cards.length} · ${c.dir==='fn'?'🇫🇷→🇳🇱':'🇳🇱→🇫🇷'}`;
+  document.getElementById('fc').classList.remove('flipped');
+  qz.flipped=false;
+  document.getElementById('answerBtns').style.display='none';
+  document.getElementById('flipBtn').style.display='';
+  // Speak button: always visible; auto-speak in listen mode
+  document.getElementById('speakBtn').style.display='';
+  if(!qz.isAK && (isListen || qz.mode==='fn')){
+    // auto-speak the French word
+    setTimeout(()=>speak(c.fr,'fr-FR'),200);
+  }
+  const d=document.getElementById('dots');
+  d.innerHTML=qz.res.map(r=>`<div class="dot ${r?'ok':'no'}"></div>`).join('')
+    +Array(Math.min(4,qz.cards.length-qz.res.length-1)).fill('<div class="dot"></div>').join('');
+}
+
+function speak(text,lang){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=lang||'fr-FR'; u.rate=0.85;
+  window.speechSynthesis.speak(u);
+}
+
+function speakCurrent(){
+  const c=qz.cards[qz.idx];
+  speak(c.fr,'fr-FR');
+}
+
+function flip(){
+  if(qz.flipped)return;
+  qz.flipped=true;
+  document.getElementById('fc').classList.add('flipped');
+  // Speak the back (answer) in Dutch after flip if nf mode
+  const c=qz.cards[qz.idx];
+  if(c.dir==='nf') setTimeout(()=>speak(c.fr,'fr-FR'),400);
+  setTimeout(()=>{
+    document.getElementById('answerBtns').style.display='grid';
+    document.getElementById('flipBtn').style.display='none';
+  },280);
+}
+
+function ans(ok){
+  qz.res.push(ok); qz.idx++;
+  if(qz.idx>=qz.cards.length) showScore(); else renderCard();
+}
+function showScore(){
+  const ok=qz.res.filter(Boolean).length, tot=qz.cards.length, pct=Math.round(ok/tot*100);
+
+  // Track wrong words for repeat button
+  qz.lastWrong = qz.cards.filter((_,i)=>!qz.res[i]).map(c=>({fr:c.fr,nl:c.nl}));
+
+  // Update quiz rounds counter
+  const key = qz.wordSet===WORDS?'fr':qz.wordSet===AK_WORDS?'ak':'wis';
+  st.quizRounds[key] = (st.quizRounds[key]||0) + 1;
+
+  // Track which words she knows
+  qz.cards.forEach((c,i)=>{
+    if(qz.res[i]){
+      const k=c.fr.substring(0,28);
+      st.wordKnown[k]=(st.wordKnown[k]||0)+1;
+    }
+  });
+
+  document.getElementById('qArea').style.display='none';
+  document.getElementById('scoreArea').style.display='block';
+  document.getElementById('scoreNum').textContent=`${ok}/${tot}`;
+  document.getElementById('scoreMsg').textContent=pct>=90?'Waanzinnig goed! 🎉':pct>=70?'Super! Nog even oefenen.':'Oefenen helpt – probeer opnieuw!';
+  document.getElementById('scoreStars').textContent=pct>=90?'⭐⭐⭐':pct>=70?'⭐⭐':'⭐';
+
+  // Show "repeat wrong" button if there are wrong words
+  const rw=document.getElementById('repeatWrongBtn');
+  if(qz.lastWrong.length>0 && qz.lastWrong.length<tot){
+    rw.style.display='';
+    rw.textContent=`🔁 Herhaal ${qz.lastWrong.length} fout${qz.lastWrong.length===1?'':'e'} woord${qz.lastWrong.length===1?'':'en'}`;
+  } else {
+    rw.style.display='none';
+  }
+
+  st.stars+=ok; save(); render(); renderQuizProg();
+  if(pct>=70) bigConfetti();
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function render(){
+  const allTasks=DAYS.flatMap(d=>d.blocks.flatMap(b=>b.tasks));
+  const doneCnt=allTasks.filter(t=>st.done[t.id]).length;
+  const pct=Math.round(doneCnt/allTasks.length*100);
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pLbl').textContent=`${doneCnt} van ${allTasks.length} taken klaar`;
+  document.getElementById('totalStars').textContent=st.stars;
+  document.getElementById('motiv').textContent=MOTIVS[Math.min(Math.floor(doneCnt/4),MOTIVS.length-1)];
+
+  const track=document.getElementById('track');
+  track.innerHTML='';
+  DAYS.forEach((day,i)=>{
+    const tasks=day.blocks.flatMap(b=>b.tasks);
+    const dc=tasks.filter(t=>st.done[t.id]).length;
+    const allDone=dc===tasks.length&&tasks.length>0;
+    const isOpen=st.open===day.id;
+
+    if(i>0){const c=document.createElement('div');c.className='connector';track.appendChild(c);}
+
+    const w=document.createElement('div'); w.className='day-wrapper';
+
+    let cls='day';
+    if(day.status==='today') cls+=' today';
+    else if(allDone) cls+=' done';
+    else if(day.bc==='b-exam') cls+=' exam';
+
+    const badgeTxt=allDone&&tasks.length>0?'✅ Klaar!':(day.badge);
+    const badgeCls=allDone&&tasks.length>0?'badge b-done':`badge ${day.bc}`;
+
+    // blocks HTML
+    const blocksHtml=day.blocks.map(b=>{
+      const stofHtml=b.stof?`<div class="stof-box">${b.stof}</div>`:'';
+      const tasksHtml=b.tasks.map(t=>{
+        const done=st.done[t.id];
+        return `<li class="task${done?' done':''}" onclick="toggle('${t.id}',event)">
+          <div class="chk">${done?'✓':''}</div>
+          <div><div class="task-lbl">${t.e} ${t.l}</div>${t.s?`<div class="task-sub">${t.s}</div>`:''}</div>
+        </li>`;
+      }).join('');
+      const ctaHtml=b.cta?`<button class="btn ${b.cta.action==='quiz'||b.cta.action==='akquiz'||b.cta.action==='wisquiz'?'btn-blue':'btn-green'}" onclick="handleCta('${day.id}','${b.cta.action}',event)">${b.cta.label}</button>`:'';
+      return `<div class="subject-block">
+        <div class="subject-title"><span class="subject-tag ${b.tagClass}">${b.tag.toUpperCase()}</span>${b.title}</div>
+        ${stofHtml}
+        <ul class="task-list">${tasksHtml}</ul>
+        ${ctaHtml}
+      </div>`;
+    }).join('');
+
+    w.innerHTML=`<div class="${cls}" onclick="toggleDay('${day.id}')">
+      <div class="day-hdr">
+        <div class="day-icon" style="background:${day.bg}">${day.icon}</div>
+        <div class="day-info">
+          <div class="day-name">${day.name}</div>
+          <div class="day-date">${day.date}</div>
+          <div class="day-sub">${day.sub}</div>
+          <div class="day-prog">${dc}/${tasks.length} gedaan</div>
+        </div>
+        <span class="${badgeCls}">${badgeTxt}</span>
+      </div>
+      <div class="day-body${isOpen?' open':''}">
+        ${blocksHtml}
+        <div class="day-reward" id="rw_${day.id}"></div>
+      </div>
+    </div>`;
+    track.appendChild(w);
+  });
+}
+
+function toggleDay(id){
+  st.open=st.open===id?null:id; save(); render();
+  if(st.open){setTimeout(()=>{
+    const el=document.querySelector(`[onclick="toggleDay('${id}')"]`);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },60);}
+}
+
+function toggle(tid,e){
+  e.stopPropagation();
+  const was=st.done[tid];
+  st.done[tid]=!was;
+  if(!was){st.stars++;confetti();}
+  else st.stars=Math.max(0,st.stars-1);
+  save(); render();
+  // check day complete
+  const day=DAYS.find(d=>d.blocks.some(b=>b.tasks.some(t=>t.id===tid)));
+  if(day){
+    const tasks=day.blocks.flatMap(b=>b.tasks);
+    if(tasks.every(t=>st.done[t.id])){
+      setTimeout(()=>{
+        const r=document.getElementById('rw_'+day.id);
+        if(r){r.style.display='block';r.textContent='🎉 Dag klaar! +'+tasks.length+' sterren!';bigConfetti();}
+      },200);
+    }
+  }
+}
+
+function handleCta(dayId,action,e){
+  e.stopPropagation();
+  if(action==='quiz') startQuiz(WORDS, null, false);
+  if(action==='akquiz') startQuiz(AK_WORDS, null, true);
+  if(action==='wisquiz') startQuiz(WIS_WORDS, null, true);
+}
+
+// ── NAVIGATE TO NEXT TASK ────────────────────────────────────────────────────
+function goToNextTask(){
+  const target=DAYS.find(day=>{
+    const tasks=day.blocks.flatMap(b=>b.tasks);
+    return tasks.length>0 && tasks.some(t=>!st.done[t.id]);
+  });
+  if(!target){
+    document.getElementById('resumeBtn').textContent='🎉 Alles klaar! Geweldig!';
+    return;
+  }
+  st.open=target.id; save(); render();
+  setTimeout(()=>{
+    const el=document.querySelector(`[onclick="toggleDay('${target.id}')"]`);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  },80);
+}
+
+// ── REPEAT WRONG WORDS ───────────────────────────────────────────────────────
+function repeatWrong(){
+  if(qz.lastWrong.length===0) return;
+  startQuiz(qz.lastWrong, null, qz.isAK);
+}
+
+// ── QUIZ PROGRESS PANEL ──────────────────────────────────────────────────────
+function renderQuizProg(){
+  const rounds=st.quizRounds||{fr:0,ak:0,wis:0};
+  const MAX=5;
+  const sets=[
+    {key:'fr', icon:'🇫🇷', label:'Frans', total:WORDS.length},
+    {key:'wis', icon:'📐', label:'Wiskunde', total:WIS_WORDS.length},
+    {key:'ak', icon:'🌍', label:'AK', total:AK_WORDS.length},
+  ];
+  // Count known words per set
+  function knownCount(wordList){
+    return wordList.filter(w=>(st.wordKnown[w.fr.substring(0,28)]||0)>=2).length;
+  }
+  const html=sets.map(s=>{
+    const n=Math.min(rounds[s.key]||0,MAX);
+    const known=knownCount(s.key==='fr'?WORDS:s.key==='ak'?AK_WORDS:WIS_WORDS);
+    const dots=Array(MAX).fill('').map((_,i)=>`<div class="qp-dot${i<n?' done':''}"></div>`).join('');
+    const countLbl=n===0?'Nog niet geoefend':`${known}/${s.total} ✅`;
+    return `<div class="qp-row"><span style="font-size:1rem">${s.icon}</span><span class="qp-label">${s.label}</span><div class="qp-dots">${dots}</div><span class="qp-count">${countLbl}</span></div>`;
+  }).join('');
+  document.getElementById('quizProg').innerHTML=html;
+}
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function confetti(){
+  const cols=['#FF4B4B','#FF9600','#58CC02','#1CB0F6','#A560E8','#FFC800'];
+  for(let i=0;i<8;i++){
+    const el=document.createElement('div'); el.className='cp';
+    const c=cols[Math.floor(Math.random()*cols.length)];
+    const size=6+Math.random()*8;
+    el.style.cssText=`left:${Math.random()*100}vw;top:0;background:${c};width:${size}px;height:${size}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-delay:${Math.random()*.4}s;`;
+    document.getElementById('cc').appendChild(el);
+    setTimeout(()=>el.remove(),2000);
+  }
+}
+function bigConfetti(){for(let i=0;i<3;i++)setTimeout(confetti,i*180);}
+
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+
+render();
+renderQuizProg();
+</script>
+</body>
+</html>
